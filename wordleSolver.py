@@ -10,6 +10,7 @@ def main():
     word_list = get_word_list()
     placed_letters = get_placed_letters()
     good_letters = get_good_letters() + placed_letters
+
     bad_letters = get_bad_letters()
 
     print('\n', placed_letters, good_letters, bad_letters, sep='\n')
@@ -19,39 +20,35 @@ def main():
     for word in suggestions:
         print(word)
 
+
 def find_suggestions(word_list, placed_letters, good_letters, bad_letters):
     suggestions = []
     for word in word_list:
-        if check_bad_letters(word, bad_letters) and check_placed_and_good_letters(word, placed_letters, good_letters):
+        if check_bad_letters(word, bad_letters) and check_placed_letters(word, placed_letters) and check_good_letters(word, good_letters):
             suggestions.append(word)
     return suggestions
-
 
 '''
     word (string): any 5 letter word
     placed_letters: list of length 5 of letters
-    bad_letters: list of length 5 of letters
-    return: True if every letter in word is a placed letter (in the correct spot) or in good_letters, else False
+    return: True if every letter in word is a placed letter (in the correct spot), else False
 '''
-def check_placed_and_good_letters(word, placed_letters, good_letters):
+def check_placed_letters(word, placed_letters):
     for i in range(5):
         if placed_letters[i] != '' and word[i] != placed_letters[i]:
             return False
-    
-    num_good_letters = len(good_letters)
-    for i in range(5):
-        if placed_letters[i] != '':
-            num_good_letters -= 1
+    return True
 
-    good_letters_in_word = 0
-    for i in range(5):
-        if word[i] in good_letters:
-            good_letters_in_word += 1
-    
-    if good_letters_in_word >= num_good_letters:
-        return True
-    else:
-        return False
+'''
+    word (string): any 5 letter word
+    good_letters: list of letters known to be in the word
+    return: True if every letter in good_letters appears in word, else False
+'''
+def check_good_letters(word, good_letters):
+    for letter in good_letters:
+        if letter != '' and letter not in word:
+            return False
+    return True
 
 '''
     word (string): any 5 letter word
